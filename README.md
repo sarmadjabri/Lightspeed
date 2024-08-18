@@ -1,2 +1,1 @@
-# Proxy-Python
-python proxy
+prive repo proxy thingy
