@@ -13,6 +13,10 @@ import json
 import scapy.all as scapy
 import argparse
 import time
+from pyvirtualdisplay import Display
+from stem import Signal
+from stem.control import Controller
+import socket
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -66,9 +70,48 @@ else:
     options.add_argument(f"--proxy-server=http://{proxy_ip}:{proxy_port}")
 
 # Set up user agent and other Stuffs
-options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3")
-options.add_argument("--lang=en-US")
-options.add_argument("--timezone=America/New_York")
+options.add_argument(f"--user-agent={config['user_agent']}")
+options.add_argument(f"--lang={config['lang']}")
+options.add_argument(f"--timezone={config['timezone']}")
+
+# Advanced proxy system using Tor
+def get_tor_proxy():
+    with Controller.from_port(port=9051) as controller:
+        controller.authenticate()
+        controller.signal(Signal.NEWNYM)
+        socks_proxy = "socks5://127.0.0.1:9050"
+        return socks_proxy
+
+tor_proxy = get_tor_proxy()
+options.add_argument(f"--proxy-server={tor_proxy}")
+
+# Headless browser using PyVirtualDisplay
+display = Display(visible=0, size=(1024, 768))
+display.start()
+
+# Create a new Chrome driver
+service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=options)
+
+# Anti-detection techniques
+def anti_detection_techniques():
+    # Disable Chrome's built-in anti-bot measures
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--enable-automation")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-gpu")
+
+    # Randomize browser window size and position
+    window_size = (random.randint(800, 1920), random.randint(600, 1080))
+    window_position = (random.randint(0, 100), random.randint(0, 100))
+    driver.set_window_size(*window_size)
+    driver.set_window_position(*window_position)
+
+    # Randomize browser zoom level
+    zoom_level = random.uniform(0.5, 1.5)
+    driver.execute_script(f"document.body.style.zoom = '{zoom_level}'")
+
+anti_detection_techniques()
 
 # Spoof packets
 def spoof_packets(interface, src_ip, dst_ip, src_port, dst_port):
@@ -79,34 +122,26 @@ def spoof_packets(interface, src_ip, dst_ip, src_port, dst_port):
 def spoof_mac(interface, mac_address):
     subprocess.run(["ip", "link", "set", interface, "address", mac_address])
 
-# Spoof IP address needs root perms
-def spoof_ip(interface, ip_address):
-    subprocess.run(["ip", "addr", "add", f"{ip_address}/24", "brd", "+", "dev", interface])
-
-# Get the interface name
-interface = ni.interfaces()[0]
+# Get network interface
+interface = args.interface
+if not interface:
+    interface = ni.gateways()['default'][ni.AF_INET][1]
 
 # Spoof MAC address
 spoof_mac(interface, mac_address)
 
-# Spoof IP address
-spoof_ip(interface, ip_address)
+# Start the browser
+driver.get("https://example.com")
 
-# Create za Chrome service
-service = Service(ChromeDriverManager().install())
+# Perform some actions on the website
+driver.find_element_by_name("q").send_keys("Hello, World!")
+driver.find_element_by_name("q").submit()
 
-# Create a new Chrome driver
-driver = webdriver.Chrome(service=service, options=options)
+# Wait for 10 seconds
+time.sleep(10)
 
-try:
-    # Go to Google search
-    driver.get("https://www.google.com")
+# Close the browser
+driver.quit()
 
-    # Spoof packets at 10 packets per second for 10 seconds
-    for i in range(100):
-        spoof_packets(interface, ip_address, "8.8.8.8", 1234, 80)
-        time.sleep(0.1)  # Send packets at 10 packets per second
-
-finally:
-    # Close the browser
-    driver.quit()
+# Stop the display
+display.stop()
