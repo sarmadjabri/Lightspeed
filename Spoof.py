@@ -121,7 +121,6 @@ def spoof_packets(interface, src_ip, dst_ip, src_port, dst_port):
 # Spoof MAC address needs root perms
 def spoof_mac(interface, mac_address):
     subprocess.run(["ip", "link", "set", interface, "address", mac_address])
-
 # Get network interface
 interface = args.interface
 if not interface:
@@ -139,6 +138,11 @@ driver.find_element_by_name("q").submit()
 
 # Wait for 10 seconds
 time.sleep(10)
+
+# Spoof packets every 10 seconds
+while True:
+    spoof_packets(interface, "192.168.1.100", "8.8.8.8", 1234, 5678)
+    time.sleep(10)
 
 # Close the browser
 driver.quit()
