@@ -4,7 +4,7 @@ from fake_useragent import UserAgent
 from langdetect import detect, lang_detect_exception
 import pytz
 from datetime import datetime
-import canvas_fingerprint
+import FingerprintJS  # Replace canvas_fingerprint with FingerprintJS
 import pywebgl
 import fonttools
 import scapy  # for packet spoofing
@@ -31,7 +31,8 @@ tz = pytz.timezone("America/New_York")
 dt = datetime.now(tz)
 
 # Set up canvas fingerprinting
-canvas_fp = canvas_fingerprint.generate_fp()
+fp = FingerprintJS.Fingerprint()
+canvas_fp = fp.getCanvasFingerprint().then(lambda x: x.visitorFP)
 
 # Set up WebGL fingerprinting
 webgl_fp = pywebgl.generate_fp()
