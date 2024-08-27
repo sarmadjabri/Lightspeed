@@ -1,7 +1,8 @@
 A piece of code that can spoof many things and open an unrestricted browser, Here is what it spoofes:
 
 DPI (deep package inspection) spoofing
-Packet spoofing spoofing
+
+Packet spoofing
 
 Font fingerprinting spoofing
 
