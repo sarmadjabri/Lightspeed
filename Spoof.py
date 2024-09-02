@@ -16,8 +16,8 @@ import time  # for traffic shaping
 import threading  # for behavioral mimicry
 
 # Set up packet spoofing
-spoof_ip = "192.168.1.100"  # set the spoofed IP address
-spoof_mac = "00:11:22:33:44:55"  # set the spoofed MAC address
+spoof_ip = "blah blah blah"  # set the spoofed IP address
+spoof_mac = "wah wah wah"  # set the spoofed MAC address
 
 # Set up DPI spoofing
 dpi_encryption = True  # enable traffic encryption
