@@ -89,31 +89,49 @@ def traffic_shaping(packets, delay_range=(0.1, 0.5)):
         time.sleep(delay)
         sendp(packet, iface="eth0")
 
-# Define the packet spoofing function
+# Define the DPI spoofing function
+def dpi_spoof(packet):
+    if dpi_encryption:
+        packet = encrypt_packet(packet)
+    if dpi_obfuscation:
+        packet = obfuscate_packet(packet)
+    if dpi_fragmentation:
+        packet = fragment_packet(packet)
+    return packet
+
+# Define the packet spoofing function using scapy
 def spoof_packet():
     # Construct the packet
     packet = IP(src=spoof_ip, dst="8.8.8.8") / TCP(sport=1234, dport=80, seq=123456789, ack=234567890, flags="SA") / "This is a sample packet payload"
 
-    # Encrypt and obfuscate the packet
-    encrypted_packet = encrypt_packet(packet)
-    obfuscated_packet = obfuscate_packet(encrypted_packet)
+    # DPI spoofing
+    packet = dpi_spoof(packet)
 
-    # Fragment the packet
-    fragments = fragment_packet(obfuscated_packet)
+    # Set the user agent and language
+    packet[TCP].options.append(("User-Agent", ua.random))
+    packet[TCP].options.append(("Accept-Language", lang))
 
-    # Reassemble the packet (for demonstration purposes only)
-    reassembled_packet = reassemble_packet(fragments)
+    # Set the timezone and datetime
+    packet[TCP].options.append(("Time-Zone", tz.zone))
+    packet[TCP].options.append(("Date", dt.strftime("%a, %d %b %Y %H:%M:%S %Z")))
 
-    # Decrypt and deobfuscate the packet (for demonstration purposes only)
-    decrypted_packet = decrypt_packet(reassembled_packet)
-    deobfuscated_packet = deobfuscate_packet(decrypted_packet)
+    # Set the canvas fingerprint
+    packet[TCP].options.append(("Canvas-Fingerprint", canvas_fp))
 
-    # Send the fragmented packets with traffic shaping
-    traffic_shaping(fragments)
+    # Set the WebGL fingerprint
+    packet[TCP].options.append(("WebGL-Fingerprint", webgl_fp))
+
+    # Set the font fingerprint
+    packet[TCP].options.append(("Font-Fingerprint", font_fp))
+
+    # Behavioral mimicry
+    packet = behavioral_mimicry(packet)
+    sendp(packet, iface="eth0")
 
     if dpi_traffic_shaping:
         # Shape the traffic patterns to mimic legitimate traffic
         packet = packet + b" " * (100 - len(packet) % 100)
+
     return packet
 
 # Set up traffic shaping
@@ -129,60 +147,16 @@ def behavioral_mimicry(packet):
     return packet
 
 def simulate_user_interaction():
-    # Simulate a user scrolling, clicking, and typing
-    time.sleep(2)
-    print("Simulating user interaction...")
-
-# Set up evasion techniques
-def evasion_techniques(packet):
-    # Rotate the User-Agent and IP address every 10 requests
-    if random.randint(1, 10) == 1:
-        ua.random = UserAgent().random
-        spoof_ip = "192.168.1." + str(random.randint(1, 100))
-    return packet
-
-# Set up the request headers
-def get_headers():
-    headers = {
-        "User-Agent": ua.random,  # Generate a random User-Agent string
-        "Accept-Language": lang,
-        "Accept-Encoding": "gzip, deflate",
-        "Connection": "keep-alive",
-        "Canvas-Fingerprint": canvas_fp,
-        "WebGL-Fingerprint": webgl_fp,
-        "Font-Fingerprint": font_fp
-    }
-    return headers
-
-# Open a browser proxy
-def open_proxy():
-    # Create a new browser instance
-    browser = pyppeteer.launch(headless=False)
-
-    # Create a new page
-    page = browser.newPage()
-
-    # Set the page URL to Schoology
-    page.goto("https://schoology.com")
-
-    # Wait for the page to load
-    page.waitForLoadState("networkidle2")
-
-    # Print a success message
-    print("Browser proxy opened successfully!")
+# Simulate a user scrolling, clicking, and typing
+# ...
 
 # Main function
 def main():
-    # Open the browser proxy
-    open_proxy()
+    # Spoof the packet
+    packet = spoof_packet()
 
-    # Send a request to Schoology
-    send_request("https://schoology.com")
+    # Send the packet
+    sendp(packet, iface="eth0")
 
-    # Keep the browser proxy open
-    while True:
-        time.sleep(1)
-
-# Run the main function
 if __name__ == "__main__":
     main()
