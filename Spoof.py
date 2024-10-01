@@ -1,71 +1,47 @@
 import requests
 import random
-from fake_useragent import UserAgent
-from langdetect import detect, lang_detect_exception
-import pytz
-from datetime import datetime
-import canvas_fingerprint  # Replace FingerprintJS with canvas-fingerprint
-import pyppeteer  # for WebGL fingerprinting
+import time
+import threading
+import ssl
+import zlib
+import scapy
+import dpkt
 import fonttools
-import scapy  # for packet spoofing
-import dpkt  # for DPI spoofing
-import ssl  # for traffic encryption
-import zlib  # for traffic compression
-import os
-import time  # for traffic shaping
-import threading  # for behavioral mimicry
+import pyppeteer
+import canvas_fingerprint
 
-# Set up packet spoofing
-spoof_ip = "blah blah blah"  # set the spoofed IP address
-spoof_mac = "wah wah wah"  # set the spoofed MAC address
+# packet spoofing stuff
+spoof_ip = "my ip address"  # lol dont try to hack me
+spoof_mac = "my mac address"  # same here
 
-# Set up DPI spoofing
-dpi_encryption = True  # enable traffic encryption
-dpi_obfuscation = True  # enable traffic obfuscation
-dpi_fragmentation = True  # enable packet fragmentation
-dpi_traffic_shaping = True  # enable traffic shaping
+# dpi spoofing stuff
+dpi_encryption = True  # yeah encryption is cool
+dpi_obfuscation = True  # and obfuscation is like a puzzle
+dpi_fragmentation = True  # and fragmentation is like a game
+dpi_traffic_shaping = True  # and traffic shaping is like a simulation
 
-# Set up user agent and language
-ua = UserAgent()
-lang = detect("This is a sample text")
-
-# Set up timezone and datetime
-tz = pytz.timezone("America/New_York")
-dt = datetime.now(tz)
-
-# Set up canvas fingerprinting
-canvas_fp = canvas_fingerprint.generate_fp()
-
-# Set up WebGL fingerprinting using pyppeteer
-browser = pyppeteer.launch(headless=True)
-page = browser.newPage()
-webgl_fp = page.evaluate("() => window.navigator.webdriver")
-
-# Set up font fingerprinting
-font_fp = fonttools.generate_fp()
-
-# Define the packet encryption and obfuscation functions
+# packet encryption and obfuscation functions
 def encrypt_packet(packet):
-    # Use SSL/TLS encryption
+    # use ssl/tls encryption
     encrypted_packet = ssl.wrap_socket(packet, server_side=False)
     return encrypted_packet
 
 def obfuscate_packet(packet):
-    # Use zlib compression
+    # use zlib compression
     compressed_packet = zlib.compress(packet)
     return compressed_packet
 
 def decrypt_packet(packet):
-    # Use SSL/TLS decryption
+    # use ssl/tls decryption
     decrypted_packet = ssl.wrap_socket(packet, server_side=True)
     return decrypted_packet
 
 def deobfuscate_packet(packet):
-    # Use zlib decompression
+    # use zlib decompression
     decompressed_packet = zlib.decompress(packet)
     return decompressed_packet
 
-# Define the packet fragmentation function
+# packet fragmentation function
 def fragment_packet(packet, max_size=1500):
     fragments = []
     while len(packet) > max_size:
@@ -75,114 +51,146 @@ def fragment_packet(packet, max_size=1500):
     fragments.append(packet)
     return fragments
 
-# Define the packet reassembly function
+# packet reassembly function
 def reassemble_packet(fragments):
     reassembled_packet = b""
     for fragment in fragments:
         reassembled_packet += fragment
     return reassembled_packet
 
-# Define the traffic shaping function
+# traffic shaping function
 def traffic_shaping(packets, delay_range=(0.1, 0.5)):
     for packet in packets:
         delay = random.uniform(delay_range[0], delay_range[1])
         time.sleep(delay)
         sendp(packet, iface="eth0")
 
-# Define the packet spoofing function
+# packet spoofing function
 def spoof_packet():
-    # Construct the packet
-    packet = IP(src=spoof_ip, dst="8.8.8.8") / TCP(sport=1234, dport=80, seq=123456789, ack=234567890, flags="SA") / "This is a sample packet payload"
+    # construct the packet
+    packet = IP(src=spoof_ip, dst="8.8.8.8") / TCP(sport=1234, dport=80, seq=123456789, ack=234567890, flags="SA") / "this is a sample packet payload"
 
-    # Encrypt and obfuscate the packet
+    # encrypt and obfuscate the packet
     encrypted_packet = encrypt_packet(packet)
     obfuscated_packet = obfuscate_packet(encrypted_packet)
 
-    # Fragment the packet
+    # fragment the packet
     fragments = fragment_packet(obfuscated_packet)
 
-    # Reassemble the packet (for demonstration purposes only)
+    # reassemble the packet (for demonstration purposes only)
     reassembled_packet = reassemble_packet(fragments)
 
-    # Decrypt and deobfuscate the packet (for demonstration purposes only)
+    # decrypt and deobfuscate the packet (for demonstration purposes only)
     decrypted_packet = decrypt_packet(reassembled_packet)
     deobfuscated_packet = deobfuscate_packet(decrypted_packet)
 
-    # Send the fragmented packets with traffic shaping
+    # send the fragmented packets with traffic shaping
     traffic_shaping(fragments)
 
     if dpi_traffic_shaping:
-        # Shape the traffic patterns to mimic legitimate traffic
+        # shape the traffic patterns to mimic legitimate traffic
         packet = packet + b" " * (100 - len(packet) % 100)
     return packet
 
-# Set up traffic shaping
+# traffic shaping function
 def traffic_shaping(packet):
-    # Simulate a delay of 1-5 seconds between packets
+    # simulate a delay of 1-5 seconds between packets
     time.sleep(random.randint(1, 5))
     return packet
 
-# Set up behavioral mimicry
+# behavioral mimicry function
 def behavioral_mimicry(packet):
-    # Simulate a user interacting with the website
+    # simulate a user interacting with the website
     threading.Thread(target=simulate_user_interaction).start()
     return packet
 
 def simulate_user_interaction():
-    # Simulate a user scrolling, clicking, and typing
+    # simulate a user scrolling, clicking, and typing
     time.sleep(2)
-    print("Simulating user interaction...")
+    print("simulating user interaction...")
 
-# Set up evasion techniques
+# evasion techniques function
 def evasion_techniques(packet):
-    # Rotate the User-Agent and IP address every 10 requests
+    # rotate the ip address every 10 requests
     if random.randint(1, 10) == 1:
-        ua.random = UserAgent().random
-        spoof_ip = "192.168.1." + str(random.randint(1, 100))
+        spoof_ip = "new ip address"  # lol gotcha
     return packet
 
-# Set up the request headers
-def get_headers():
-    headers = {
-        "User-Agent": ua.random,  # Generate a random User-Agent string
-        "Accept-Language": lang,
-        "Accept-Encoding": "gzip, deflate",
-        "Connection": "keep-alive",
-        "Canvas-Fingerprint": canvas_fp,
-        "WebGL-Fingerprint": webgl_fp,
-        "Font-Fingerprint": font_fp
-    }
-    return headers
+# canvas fingerprinting function
+def canvas_fingerprinting():
+    # use canvas-fingerprint library to generate a fingerprint
+    fingerprint = canvas_fingerprint.generate_fp()
+    return fingerprint
 
-# Open a browser proxy
-def open_proxy():
-    # Create a new browser instance
-    browser = pyppeteer.launch(headless=False)
-
-    # Create a new page
+# webgl fingerprinting function
+def webgl_fingerprinting():
+    # use pyppeteer to generate a fingerprint
+    browser = pyppeteer.launch(headless=True)
     page = browser.newPage()
+    fingerprint = page.evaluate("() => window.navigator.webdriver")
+    return fingerprint
 
-    # Set the page URL to Schoology
-    page.goto("https://schoology.com")
+# font fingerprinting function
+def font_fingerprinting():
+    # use fonttools to generate a fingerprint
+    fingerprint = fonttools.generate_fp()
+    return fingerprint
 
-    # Wait for the page to load
-    page.waitForLoadState("networkidle2")
-
-    # Print a success message
-    print("Browser proxy opened successfully!")
-
-# Main function
+# main function
 def main():
-    # Open the browser proxy
+    # open the browser proxy
     open_proxy()
 
-    # Send a request to Schoology
+
+
+# main function
+def main():
+    # open the browser proxy
+    open_proxy()
+
+    # send a request to schoology
     send_request("https://schoology.com")
 
-    # Keep the browser proxy open
+    # get the canvas fingerprint
+    canvas_fp = canvas_fingerprinting()
+
+    # get the webgl fingerprint
+    webgl_fp = webgl_fingerprinting()
+
+    # get the font fingerprint
+    font_fp = font_fingerprinting()
+
+    # create a new packet with the fingerprints
+    packet = IP(src=spoof_ip, dst="8.8.8.8") / TCP(sport=1234, dport=80, seq=123456789, ack=234567890, flags="SA") / "this is a sample packet payload"
+    packet = packet + b"Canvas-Fingerprint: " + canvas_fp.encode() + b"\n"
+    packet = packet + b"WebGL-Fingerprint: " + webgl_fp.encode() + b"\n"
+    packet = packet + b"Font-Fingerprint: " + font_fp.encode() + b"\n"
+
+    # encrypt and obfuscate the packet
+    encrypted_packet = encrypt_packet(packet)
+    obfuscated_packet = obfuscate_packet(encrypted_packet)
+
+    # fragment the packet
+    fragments = fragment_packet(obfuscated_packet)
+
+    # reassemble the packet (for demonstration purposes only)
+    reassembled_packet = reassemble_packet(fragments)
+
+    # decrypt and deobfuscate the packet (for demonstration purposes only)
+    decrypted_packet = decrypt_packet(reassembled_packet)
+    deobfuscated_packet = deobfuscate_packet(decrypted_packet)
+
+    # send the fragmented packets with traffic shaping
+    traffic_shaping(fragments)
+
+    if dpi_traffic_shaping:
+        # shape the traffic patterns to mimic legitimate traffic
+        packet = packet + b" " * (100 - len(packet) % 100)
+
+    # keep the browser proxy open
     while True:
         time.sleep(1)
 
-# Run the main function
+# run the main function
 if __name__ == "__main__":
     main()
