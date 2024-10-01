@@ -1,4 +1,4 @@
-import requests
+import requests #note to self to review code for ai mistakes as usual
 import random
 import time
 import threading
@@ -15,10 +15,10 @@ spoof_ip = "my ip address"  # lol dont try to hack me
 spoof_mac = "my mac address"  # same here
 
 # dpi spoofing stuff
-dpi_encryption = True  # yeah encryption is cool
-dpi_obfuscation = True  # and obfuscation is like a puzzle
-dpi_fragmentation = True  # and fragmentation is like a game
-dpi_traffic_shaping = True  # and traffic shaping is like a simulation
+dpi_encryption = True  # yeah encryption is cool if your shady but im not so i dont understand teh point
+dpi_obfuscation = True  # and obfuscation is annoying but makes sense kinda like making things more complicated then needed
+dpi_fragmentation = True  # and fragmentation is nerdy stuff im not fully aware about need to learn more to call this my work
+dpi_traffic_shaping = True  
 
 # packet encryption and obfuscation functions
 def encrypt_packet(packet):
