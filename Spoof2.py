@@ -12,8 +12,8 @@ import time
 import base64
 
 # Set up constants for spoofing
-SPOOF_IP = "192.168.1.100"  # Example spoofed IP address
-SPOOF_MAC = "00:11:22:33:44:55"  # Example spoofed MAC address
+SPOOF_IP = ""  # Example spoofed IP address
+SPOOF_MAC = ""  # Example spoofed MAC address
 
 # DPI spoofing settings
 DPI_SETTINGS = {
