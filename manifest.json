@@ -1,0 +1,20 @@
+{
+   "author": "Lightspeed Systems",
+   "background": {
+      "service_worker": "background.js"
+   },
+   "description": "Companion Extension for the Relay Classroom Windows Agent",
+   "host_permissions": [ "http://localhost:62337/*", "http://localhost:61337/*", "http://*.google.com/bookmarks/*" ],
+   "icons": {
+      "128": "images/icon_128.png",
+      "16": "images/icon_16.png",
+      "32": "images/icon_32.png",
+      "48": "images/icon_48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAon5rIx03S6F6BH6Qz6z/kMV2YidHR8p1KKDH+az73wy86SAJD7wkuxlhVD3I1wFwK0aiuTE5uGmVf976MtQ6oHabggLJ/O0N2I/btYk5TV+69zCx1oCZ2TuhMfRnX0/QM80M//RYcdTgOZ5Z4KbDETDYKBrcSufCIC4TbdKdB3nJx/iXhXzxDh04wEqsVmpJTrIEZlL0B+rLsgRmgzmdlMULP86P6tYkognJ/r6Ng7YqEHXi++dYNJmiwgS6GiSJnkkqgNWz9uY3oLLKcoe2sJ+KDgk02uYd8tBPLZTQgjaXZ918ewTv7HTlzcArpoWrwpI8gSxvdNLJNdnnONtA2wIDAQAB",
+   "manifest_version": 3,
+   "name": "Relay Classroom Helper Extension",
+   "permissions": [ "tabs", "bookmarks", "alarms" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.0.0"
+}
